@@ -1,0 +1,41 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Header from '@/components/layout/Header.astro';
+import Footer from '@/components/layout/Footer.astro';
+import Hero from '@/components/sections/Hero.astro';
+import About from '@/components/sections/About.astro';
+import Work from '@/components/sections/Work.astro';
+import Skills from '@/components/sections/Skills.astro';
+import Experience from '@/components/sections/Experience.astro';
+import Writing from '@/components/sections/Writing.astro';
+import Education from '@/components/sections/Education.astro';
+import Contact from '@/components/sections/Contact.astro';
+import { profile } from '@/data/profile';
+import { careerLength } from '@/data/experience';
+import { assertTagsMatchSkills } from '@/lib/validate';
+
+assertTagsMatchSkills();
+
+const title = `${profile.name} — ${profile.role}`;
+const description =
+  `Senior Ruby on Rails engineer with ${careerLength.words} years of experience: REST APIs, integrations with banks, security, testing and Hotwire. Based in Poland, working with UK and US clients.`;
+---
+
+<BaseLayout title={title} description={description}>
+  <Header />
+  <main id="main">
+    <Hero />
+    <About />
+    <Work />
+    <Skills />
+    <Experience />
+    <Writing />
+    <Education />
+    <Contact />
+  </main>
+  <Footer />
+</BaseLayout>
+
+<script>
+  import '@/scripts/main';
+</script>

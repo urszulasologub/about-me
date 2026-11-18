@@ -1,0 +1,58 @@
+---
+/*
+ * A card with a soft glow that follows the pointer.
+ * The pointer position is set as CSS vars by scripts/spotlight.ts.
+ */
+interface Props {
+  as?: 'article' | 'div' | 'li';
+  class?: string;
+  style?: string;
+  [key: `data-${string}`]: unknown;
+}
+
+const { as: Element = 'article', class: className, ...rest } = Astro.props;
+---
+
+<Element class:list={['card', className]} data-spotlight data-reveal {...rest}>
+  <slot />
+</Element>
+
+<style>
+  .card {
+    position: relative;
+    isolation: isolate;
+    padding: clamp(1.4rem, 3vw, 2rem);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    background: var(--surface);
+    overflow: hidden;
+    transition:
+      border-color 300ms ease,
+      background-color 300ms ease,
+      opacity var(--dur) var(--ease-out),
+      transform var(--dur) var(--ease-out);
+    transition-delay: 0s, 0s, calc(var(--reveal-i, 0) * 70ms), calc(var(--reveal-i, 0) * 70ms);
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    opacity: 0;
+    background: radial-gradient(
+      420px circle at var(--mx, 50%) var(--my, 50%),
+      var(--glow),
+      transparent 60%
+    );
+    transition: opacity 300ms ease;
+  }
+
+  .card:hover {
+    border-color: var(--border-strong);
+  }
+
+  .card:hover::before {
+    opacity: 1;
+  }
+</style>

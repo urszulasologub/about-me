@@ -1,0 +1,465 @@
+---
+import { Image } from 'astro:assets';
+import avatar from '@/assets/avatar.jpg';
+import { profile, stats } from '@/data/profile';
+
+const [firstName, ...rest] = profile.name.split(' ');
+const lastName = rest.join(' ');
+---
+
+<section class="hero" id="top">
+  <div class="hero__aurora" aria-hidden="true">
+    <span class="blob blob--a"></span>
+    <span class="blob blob--b"></span>
+    <span class="blob blob--c"></span>
+  </div>
+  <div class="hero__grid-lines" aria-hidden="true"></div>
+
+  <div class="container hero__inner">
+    <div class="hero__text">
+      <p class="hero__eyebrow" data-reveal>
+        <span class="pulse" aria-hidden="true"></span>
+        {profile.role}
+      </p>
+
+      <h1 class="hero__name serif" data-reveal style="--reveal-i: 1">
+        {firstName}
+        <em class="accent-text">{lastName}</em>
+      </h1>
+
+      <p class="hero__tagline" data-reveal style="--reveal-i: 2">{profile.tagline}</p>
+
+      <div class="hero__actions" data-reveal style="--reveal-i: 3">
+        <a class="btn btn--primary" href="#work">
+          Selected work
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6"></path></svg>
+        </a>
+        <a class="btn btn--ghost" href={profile.linkedin} target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" aria-hidden="true" class="li">
+            <path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM3 9.75h4v11H3v-11Zm6.5 0h3.8v1.5h.06c.53-1 1.83-2.05 3.77-2.05 4.03 0 4.77 2.65 4.77 6.1v5.45h-4v-4.83c0-1.15-.02-2.63-1.6-2.63-1.6 0-1.85 1.25-1.85 2.55v4.91h-4v-11Z"></path>
+          </svg>
+          Connect on LinkedIn
+        </a>
+      </div>
+
+      <p class="hero__meta" data-reveal style="--reveal-i: 4">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-6.1-7-11.5a7 7 0 0 1 14 0C19 14.9 12 21 12 21Z"></path><circle cx="12" cy="9.5" r="2.5"></circle></svg>
+        {profile.location}
+      </p>
+    </div>
+
+    <div class="hero__portrait" data-reveal style="--reveal-i: 2">
+      <div class="portrait">
+        <span class="portrait__halo" aria-hidden="true"></span>
+        <Image
+          src={avatar}
+          alt={`Portrait of ${profile.name}`}
+          width={440}
+          height={440}
+          widths={[440, 760]}
+          sizes="(max-width: 860px) 11rem, 22rem"
+          loading="eager"
+          fetchpriority="high"
+          class="portrait__img"
+        />
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <dl class="stats">
+      {
+        stats.map((stat, i) => (
+          <div class="stat" data-reveal style={`--reveal-i: ${i + 4}`}>
+            <dt class="stat__label">{stat.label}</dt>
+            <dd class="stat__value serif">{stat.value}</dd>
+          </div>
+        ))
+      }
+    </dl>
+  </div>
+
+  <a class="scroll-cue" href="#about" aria-label="Scroll to About">
+    <span></span>
+  </a>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-top: 7rem;
+    padding-bottom: 5rem;
+    overflow: hidden;
+  }
+
+  /* Slowly drifting colour fields behind the hero */
+  .hero__aurora {
+    position: absolute;
+    inset: -20% -10% auto;
+    height: 120%;
+    z-index: -2;
+    filter: blur(80px);
+    opacity: 0.55;
+  }
+
+  .blob {
+    position: absolute;
+    border-radius: 50%;
+    animation: drift 24s var(--ease-out) infinite alternate;
+  }
+
+  .blob--a {
+    width: 42vw;
+    height: 42vw;
+    top: 5%;
+    right: 5%;
+    background: radial-gradient(circle, var(--ruby) 0%, transparent 65%);
+  }
+
+  .blob--b {
+    width: 34vw;
+    height: 34vw;
+    top: 35%;
+    right: 30%;
+    background: radial-gradient(circle, var(--ember) 0%, transparent 65%);
+    opacity: 0.6;
+    animation-duration: 30s;
+    animation-delay: -8s;
+  }
+
+  .blob--c {
+    width: 30vw;
+    height: 30vw;
+    top: -5%;
+    left: -5%;
+    background: radial-gradient(circle, #6b4cff 0%, transparent 65%);
+    opacity: 0.35;
+    animation-duration: 36s;
+    animation-delay: -14s;
+  }
+
+  @keyframes drift {
+    from {
+      transform: translate3d(0, 0, 0) scale(1);
+    }
+    to {
+      transform: translate3d(-6vw, 4vh, 0) scale(1.15);
+    }
+  }
+
+  .hero__grid-lines {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background-image:
+      linear-gradient(var(--border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size: 72px 72px;
+    mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, #000 20%, transparent 75%);
+    -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, #000 20%, transparent 75%);
+    opacity: 0.6;
+  }
+
+  .hero__inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+    align-items: center;
+    gap: clamp(2rem, 6vw, 5rem);
+  }
+
+  .hero__eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.4rem 0.9rem 0.4rem 0.7rem;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--surface);
+    backdrop-filter: blur(8px);
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.04em;
+    color: var(--text-muted);
+  }
+
+  .pulse {
+    position: relative;
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background: var(--ruby);
+  }
+
+  .pulse::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: inherit;
+    animation: pulse 2.4s ease-out infinite;
+  }
+
+  @keyframes pulse {
+    to {
+      transform: scale(3);
+      opacity: 0;
+    }
+  }
+
+  .hero__name {
+    margin-top: 1.5rem;
+    font-size: var(--step-4);
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+  }
+
+  .hero__name em {
+    display: block;
+    font-style: italic;
+    padding-right: 0.08em;
+  }
+
+  .hero__tagline {
+    margin-top: 1.75rem;
+    max-width: 34rem;
+    font-size: var(--step-1);
+    line-height: 1.5;
+    color: var(--text-muted);
+  }
+
+  .hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 2.25rem;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    padding: 0.8rem 1.3rem;
+    border-radius: 999px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition:
+      transform 250ms var(--ease-out),
+      background-color 250ms ease,
+      border-color 250ms ease,
+      box-shadow 250ms ease;
+  }
+
+  .btn svg {
+    width: 1rem;
+    height: 1rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .btn svg.li {
+    fill: currentColor;
+    stroke: none;
+  }
+
+  .btn:hover {
+    transform: translateY(-2px);
+  }
+
+  .btn--primary {
+    background: var(--accent-gradient);
+    color: #fff;
+    box-shadow: 0 10px 30px -10px var(--ruby);
+  }
+
+  .btn--primary:hover {
+    box-shadow: 0 16px 40px -12px var(--ruby);
+  }
+
+  .btn--ghost {
+    border: 1px solid var(--border-strong);
+    background: var(--surface);
+    backdrop-filter: blur(8px);
+  }
+
+  .btn--ghost:hover {
+    border-color: var(--text-muted);
+  }
+
+  .hero__meta {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-top: 1.75rem;
+    font-size: var(--step--1);
+    color: var(--text-faint);
+  }
+
+  .hero__meta svg {
+    width: 1rem;
+    height: 1rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+  }
+
+  /* Portrait */
+  .hero__portrait {
+    display: flex;
+    justify-content: center;
+  }
+
+  .portrait {
+    position: relative;
+    width: min(100%, 22rem);
+    aspect-ratio: 1;
+  }
+
+  .portrait__halo {
+    position: absolute;
+    inset: -3px;
+    border-radius: 50%;
+    background: conic-gradient(from 0deg, var(--ruby), var(--ember), transparent 40%, transparent 60%, var(--ruby));
+    animation: spin 14s linear infinite;
+  }
+
+  .portrait__halo::after {
+    content: '';
+    position: absolute;
+    inset: -30px;
+    border-radius: 50%;
+    background: inherit;
+    filter: blur(40px);
+    opacity: 0.35;
+  }
+
+  @keyframes spin {
+    to {
+      transform: rotate(1turn);
+    }
+  }
+
+  .portrait__img {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 6px solid var(--bg);
+    filter: saturate(0.9) contrast(1.03);
+  }
+
+  /* Stats */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    margin: clamp(3rem, 8vw, 5.5rem) 0 0;
+    border-top: 1px solid var(--border);
+  }
+
+  .stat {
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 0.35rem;
+    padding: 1.5rem 1.5rem 0 0;
+  }
+
+  .stat + .stat {
+    padding-left: 1.5rem;
+    border-left: 1px solid var(--border);
+  }
+
+  .stat__value {
+    margin: 0;
+    font-size: var(--step-2);
+    line-height: 1;
+  }
+
+  .stat__label {
+    font-size: var(--step--1);
+    color: var(--text-muted);
+  }
+
+  .scroll-cue {
+    position: absolute;
+    left: 50%;
+    bottom: 1.5rem;
+    width: 1.4rem;
+    height: 2.2rem;
+    margin-left: -0.7rem;
+    border: 1px solid var(--border-strong);
+    border-radius: 999px;
+    transition: opacity 300ms ease;
+  }
+
+  :global(.is-scrolled) .scroll-cue {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .scroll-cue span {
+    position: absolute;
+    top: 0.4rem;
+    left: 50%;
+    width: 2px;
+    height: 0.45rem;
+    margin-left: -1px;
+    border-radius: 2px;
+    background: var(--text-muted);
+    animation: cue 2s var(--ease-out) infinite;
+  }
+
+  @keyframes cue {
+    0% {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    80%,
+    100% {
+      transform: translateY(0.8rem);
+      opacity: 0;
+    }
+  }
+
+  @media (max-width: 860px) {
+    .hero {
+      padding-top: 6rem;
+    }
+
+    .hero__inner {
+      grid-template-columns: 1fr;
+    }
+
+    .hero__portrait {
+      order: -1;
+      justify-content: flex-start;
+    }
+
+    .portrait {
+      width: 11rem;
+    }
+
+    .stats {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .stat:nth-child(3) {
+      padding-left: 0;
+      border-left: 0;
+    }
+
+    .stat:nth-child(n + 3) {
+      margin-top: 1rem;
+    }
+
+    .scroll-cue {
+      display: none;
+    }
+  }
+</style>

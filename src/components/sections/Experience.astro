@@ -1,0 +1,219 @@
+---
+import SectionHeading from '@/components/ui/SectionHeading.astro';
+import Tag from '@/components/ui/Tag.astro';
+import { experience } from '@/data/experience';
+import { formatPeriod } from '@/lib/dates';
+---
+
+<section class="section" id="experience">
+  <div class="container">
+    <SectionHeading
+      index="04"
+      eyebrow="Experience"
+      title="Where I have <em>been</em>"
+    />
+
+    {
+      experience.map((job) => (
+        <div class="job">
+          <header class="job__head" data-reveal>
+            <div>
+              <h3 class="job__company serif">{job.company}</h3>
+              <p class="job__role">{job.role}</p>
+            </div>
+            <div class="job__meta">
+              <span>{formatPeriod(job.start, job.end)}</span>
+              {job.location && <span>{job.location}</span>}
+            </div>
+            <p class="job__summary">{job.summary}</p>
+          </header>
+
+          <ol class="timeline" data-timeline>
+            <span class="timeline__rail" aria-hidden="true">
+              <span class="timeline__fill" data-timeline-fill />
+            </span>
+            {job.engagements.map((item, i) => (
+              <li class="entry" data-reveal style={`--reveal-i: ${i}`}>
+                <span class="entry__node" aria-hidden="true" />
+                <p class="entry__period">{item.period}</p>
+                <h4 class="entry__title">{item.title}</h4>
+                <p class="entry__summary">{item.summary}</p>
+                {item.points && (
+                  <ul class="entry__points">
+                    {item.points.map((point) => (
+                      <li>{point}</li>
+                    ))}
+                  </ul>
+                )}
+                {item.tags && (
+                  <div class="entry__tags">
+                    {item.tags.map((tag) => (
+                      <Tag name={tag} linked={false} />
+                    ))}
+                  </div>
+                )}
+              </li>
+            ))}
+          </ol>
+        </div>
+      ))
+    }
+  </div>
+</section>
+
+<style>
+  .section {
+    padding-block: var(--section-gap);
+  }
+
+  .job + .job {
+    margin-top: 4rem;
+  }
+
+  .job__head {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 0.5rem 2rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .job__company {
+    font-size: var(--step-3);
+  }
+
+  .job__role {
+    margin-top: 0.4rem;
+    color: var(--ruby);
+    font-weight: 500;
+  }
+
+  .job__meta {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.2rem;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--text-muted);
+  }
+
+  .job__summary {
+    grid-column: 1 / -1;
+    margin-top: 0.75rem;
+    max-width: 44rem;
+    color: var(--text-muted);
+  }
+
+  .timeline {
+    position: relative;
+    margin: 0;
+    padding: 2.5rem 0 0 2.25rem;
+    list-style: none;
+  }
+
+  .timeline__rail {
+    position: absolute;
+    left: 0.4rem;
+    top: 2.5rem;
+    bottom: 0;
+    width: 1px;
+    background: var(--border-strong);
+  }
+
+  /* Fills as the timeline scrolls through the viewport */
+  .timeline__fill {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(var(--ruby), var(--ember));
+    transform-origin: top;
+    transform: scaleY(var(--fill, 0));
+  }
+
+  .entry {
+    position: relative;
+    padding-bottom: 3rem;
+  }
+
+  .entry:last-child {
+    padding-bottom: 0;
+  }
+
+  .entry__node {
+    position: absolute;
+    left: calc(-2.25rem + 0.4rem - 0.4rem);
+    top: 0.25rem;
+    width: 0.8rem;
+    height: 0.8rem;
+    border-radius: 50%;
+    border: 1px solid var(--ruby);
+    background: var(--bg);
+    box-shadow: 0 0 0 5px var(--bg);
+  }
+
+  .entry:first-of-type .entry__node {
+    background: var(--ruby);
+    box-shadow: 0 0 0 5px var(--bg), 0 0 18px var(--ruby);
+  }
+
+  .entry__period {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--text-muted);
+  }
+
+  .entry__title {
+    margin-top: 0.4rem;
+    font-family: var(--font-sans);
+    font-size: var(--step-1);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  .entry__summary {
+    margin-top: 0.5rem;
+    max-width: 44rem;
+    color: var(--text-muted);
+  }
+
+  .entry__points {
+    display: grid;
+    gap: 0.4rem;
+    margin-top: 1rem;
+    max-width: 44rem;
+    font-size: 0.95rem;
+  }
+
+  .entry__points li {
+    position: relative;
+    padding-left: 1.1rem;
+  }
+
+  .entry__points li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.68em;
+    width: 0.45rem;
+    height: 2px;
+    border-radius: 2px;
+    background: var(--ruby);
+  }
+
+  .entry__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-top: 1.25rem;
+  }
+
+  @media (max-width: 640px) {
+    .job__head {
+      grid-template-columns: 1fr;
+    }
+
+    .job__meta {
+      align-items: flex-start;
+    }
+  }
+</style>

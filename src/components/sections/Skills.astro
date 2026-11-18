@@ -1,0 +1,359 @@
+---
+import SectionHeading from '@/components/ui/SectionHeading.astro';
+import { levelLabels, skillGroups } from '@/data/skills';
+import { slugify } from '@/lib/url';
+
+const total = skillGroups.reduce((sum, group) => sum + group.skills.length, 0);
+
+// A lone last group in the two-column grid spans the full width.
+const regular = skillGroups.filter((group) => !group.featured);
+const wideId = regular.length % 2 === 1 ? regular.at(-1)?.id : undefined;
+---
+
+<section class="section" id="skills">
+  <div class="container">
+    <SectionHeading
+      index="03"
+      eyebrow="Skills & tools"
+      title="Search the <em>stack</em>"
+      lead="Type a technology or a topic — for example “testing”, “auth” or “ai”."
+    />
+
+    <div class="skills" data-skills>
+      <div class="toolbar" data-reveal>
+        <label class="search">
+          <span class="visually-hidden">Search skills</span>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
+          <input
+            type="search"
+            placeholder="Search skills…"
+            autocomplete="off"
+            spellcheck="false"
+            data-skills-input
+          />
+          <kbd aria-hidden="true">/</kbd>
+        </label>
+
+        <div class="filters" role="group" aria-label="Filter by area">
+          <button type="button" class="filter is-active" data-skills-group="all" aria-pressed="true">All</button>
+          {
+            skillGroups.map((group) => (
+              <button type="button" class="filter" data-skills-group={group.id} aria-pressed="false">
+                {group.title}
+              </button>
+            ))
+          }
+        </div>
+      </div>
+
+      <div class="status" data-reveal>
+        <p aria-live="polite">
+          <span data-skills-count>{total}</span> of {total} skills
+        </p>
+        <ul class="legend" aria-label="Legend">
+          {
+            Object.entries(levelLabels).map(([level, label]) => (
+              <li>
+                <span class={`dot dot--${level}`} aria-hidden="true" />
+                {label}
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+
+      <div class="groups">
+        {
+          skillGroups.map((group, i) => (
+            <article class:list={['group', { 'group--featured': group.featured, 'group--wide': group.id === wideId }]} data-group={group.id} data-reveal style={`--reveal-i: ${i % 3}`}>
+              <header>
+                <h3 class="group__title">
+                  {group.title}
+                  {group.badge && <span class="group__badge">{group.badge}</span>}
+                </h3>
+                <p class="group__blurb">{group.blurb}</p>
+              </header>
+              <ul class="group__skills">
+                {group.skills.map((skill) => (
+                  <li
+                    class={`skill skill--${skill.level}`}
+                    id={`skill-${slugify(skill.name)}`}
+                    data-skill={[skill.name, ...(skill.aliases ?? []), group.title].join(' ').toLowerCase()}
+                    data-skill-name={skill.name.toLowerCase()}
+                    title={levelLabels[skill.level]}
+                  >
+                    <span class={`dot dot--${skill.level}`} aria-hidden="true" />
+                    {skill.name}
+                    <span class="visually-hidden">({levelLabels[skill.level]})</span>
+                  </li>
+                ))}
+              </ul>
+            </article>
+          ))
+        }
+      </div>
+
+      <p class="empty" data-skills-empty hidden>
+        Nothing found. <button type="button" data-skills-reset>Clear search</button>
+      </p>
+    </div>
+  </div>
+</section>
+
+<script>
+  import { initSkillsFilter } from '@/scripts/skills-filter';
+  initSkillsFilter();
+</script>
+
+<style>
+  .section {
+    padding-block: var(--section-gap);
+  }
+
+  .toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .search {
+    position: relative;
+    flex: 1 1 18rem;
+    max-width: 26rem;
+  }
+
+  .search svg {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    width: 1.05rem;
+    height: 1.05rem;
+    transform: translateY(-50%);
+    fill: none;
+    stroke: var(--text-muted);
+    stroke-width: 2;
+    stroke-linecap: round;
+    pointer-events: none;
+  }
+
+  .search input {
+    width: 100%;
+    padding: 0.85rem 2.75rem;
+    border: 1px solid var(--border-strong);
+    border-radius: 999px;
+    background: var(--surface);
+    color: var(--text);
+    font: inherit;
+    font-size: 0.95rem;
+    transition: border-color 200ms ease, box-shadow 200ms ease;
+  }
+
+  .search input::placeholder {
+    color: var(--text-faint);
+  }
+
+  .search input:focus {
+    outline: none;
+    border-color: var(--ruby);
+    box-shadow: 0 0 0 4px var(--ruby-soft);
+  }
+
+  .search kbd {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    padding: 0.05rem 0.45rem;
+    border: 1px solid var(--border-strong);
+    border-radius: 0.35rem;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--text-faint);
+  }
+
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  .filter {
+    padding: 0.45rem 0.85rem;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: transparent;
+    color: var(--text-muted);
+    font: inherit;
+    font-size: 0.84rem;
+    cursor: pointer;
+    transition: all 200ms ease;
+  }
+
+  .filter:hover {
+    color: var(--text);
+    border-color: var(--border-strong);
+  }
+
+  .filter.is-active {
+    color: var(--bg);
+    background: var(--text);
+    border-color: var(--text);
+  }
+
+  .status {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.75rem 2rem;
+    margin-block: 1.75rem 1.25rem;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--text-muted);
+  }
+
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 1.25rem;
+  }
+
+  .legend li {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+  }
+
+  .groups {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 26rem), 1fr));
+    gap: 1rem;
+  }
+
+  .group--wide {
+    grid-column: 1 / -1;
+  }
+
+  .group--featured {
+    grid-column: 1 / -1;
+    border-color: color-mix(in srgb, var(--ruby) 45%, var(--border));
+    background:
+      radial-gradient(120% 140% at 0% 0%, color-mix(in srgb, var(--ruby) 9%, transparent), transparent 60%),
+      var(--surface);
+  }
+
+  .group__badge {
+    margin-left: 0.6rem;
+    padding: 0.15rem 0.5rem;
+    border: 1px solid color-mix(in srgb, var(--ruby) 50%, transparent);
+    border-radius: 999px;
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    font-weight: 400;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ruby);
+    vertical-align: 0.15em;
+  }
+
+  .group {
+    padding: 1.5rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface);
+  }
+
+  .group[hidden] {
+    display: none;
+  }
+
+  .group__title {
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-size: 1.05rem;
+  }
+
+  .group__blurb {
+    margin-top: 0.3rem;
+    font-size: 0.88rem;
+    color: var(--text-muted);
+  }
+
+  .group__skills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+    margin-top: 1.1rem;
+  }
+
+  .skill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.35rem 0.75rem;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    font-size: 0.86rem;
+    transition:
+      opacity 250ms ease,
+      border-color 250ms ease,
+      background-color 250ms ease,
+      transform 250ms var(--ease-out);
+  }
+
+  .skill.is-dimmed {
+    opacity: 0.22;
+  }
+
+  .skill.is-match {
+    border-color: var(--ruby);
+    background: var(--ruby-soft);
+  }
+
+  .skill.is-flash {
+    animation: flash 1.2s var(--ease-out);
+  }
+
+  @keyframes flash {
+    30% {
+      transform: scale(1.08);
+      box-shadow: 0 0 0 6px var(--ruby-soft);
+    }
+  }
+
+  .dot {
+    width: 0.45rem;
+    height: 0.45rem;
+    border-radius: 50%;
+    flex: none;
+  }
+
+  .dot--core {
+    background: var(--accent-gradient);
+    box-shadow: 0 0 8px var(--glow);
+  }
+
+  .dot--strong {
+    background: var(--text-muted);
+  }
+
+  .dot--familiar {
+    border: 1px solid var(--text-muted);
+  }
+
+  .empty {
+    padding: 3rem 0;
+    text-align: center;
+    color: var(--text-muted);
+  }
+
+  .empty button {
+    margin-left: 0.5rem;
+    border: 0;
+    background: none;
+    color: var(--ruby);
+    font: inherit;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+</style>

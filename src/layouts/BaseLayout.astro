@@ -1,0 +1,89 @@
+---
+import '@fontsource-variable/inter';
+import '@fontsource-variable/jetbrains-mono';
+import '@fontsource/instrument-serif/latin-400.css';
+import '@fontsource/instrument-serif/latin-400-italic.css';
+import '@fontsource/instrument-serif/latin-ext-400.css';
+import '@fontsource/instrument-serif/latin-ext-400-italic.css';
+import '@/styles/global.css';
+
+import { profile } from '@/data/profile';
+import { skillGroups } from '@/data/skills';
+import { withBase } from '@/lib/url';
+import { getImage } from 'astro:assets';
+import avatar from '@/assets/avatar.jpg';
+
+interface Props {
+  title: string;
+  description: string;
+}
+
+const { title, description } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const allSkills = skillGroups.flatMap((g) => g.skills.map((s) => s.name));
+const photo = await getImage({ src: avatar, format: 'jpg' });
+const ogImage = new URL(withBase('og.png'), Astro.site);
+
+// Structured data helps search engines index the skills as a Person profile.
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'ProfilePage',
+  url: canonical.href,
+  mainEntity: {
+    '@type': 'Person',
+    name: profile.name,
+    jobTitle: profile.role,
+    url: canonical.href,
+    image: new URL(photo.src, Astro.site).href,
+    address: { '@type': 'PostalAddress', addressLocality: 'Łódź', addressCountry: 'PL' },
+    knowsLanguage: ['pl', 'en'],
+    knowsAbout: allSkills,
+    sameAs: [profile.linkedin],
+  },
+};
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="author" content={profile.name} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/svg+xml" href={withBase('favicon.svg')} />
+    <link rel="sitemap" href={withBase('sitemap-index.xml')} />
+    <meta name="theme-color" content="#0b0a0c" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#f8f5f1" media="(prefers-color-scheme: light)" />
+
+    <meta property="og:type" content="profile" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={title} />
+    <meta property="og:locale" content="en_GB" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+
+    <!-- Set theme and JS flag before paint to avoid a flash -->
+    <script is:inline>
+      (function () {
+        var root = document.documentElement;
+        root.classList.add('js');
+        try {
+          var saved = localStorage.getItem('theme');
+          if (saved === 'light' || saved === 'dark') root.dataset.theme = saved;
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <slot />
+  </body>
+</html>

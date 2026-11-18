@@ -1,0 +1,91 @@
+---
+import { profile } from '@/data/profile';
+---
+
+<section class="contact" id="contact">
+  <div class="container">
+    <div class="contact__card" data-reveal>
+      <span class="contact__glow" aria-hidden="true"></span>
+      <p class="contact__eyebrow">Let's talk</p>
+      <h2 class="contact__title serif">
+        Need a Rails engineer who <em class="accent-text">owns</em> the result?
+      </h2>
+      <p class="contact__text">The best way to reach me is LinkedIn.</p>
+      <a class="contact__btn" href={profile.linkedin} target="_blank" rel="noopener noreferrer">
+        Message me on LinkedIn
+        <span aria-hidden="true">↗</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .contact {
+    padding-block: var(--section-gap);
+  }
+
+  .contact__card {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    padding: clamp(3rem, 8vw, 6rem) clamp(1.5rem, 6vw, 5rem);
+    border: 1px solid var(--border);
+    border-radius: calc(var(--radius-lg) * 1.5);
+    background: var(--bg-elev);
+    text-align: center;
+  }
+
+  .contact__glow {
+    position: absolute;
+    left: 50%;
+    bottom: -60%;
+    z-index: -1;
+    width: 80%;
+    aspect-ratio: 1;
+    transform: translateX(-50%);
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--glow), transparent 60%);
+    filter: blur(30px);
+  }
+
+  .contact__eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ruby);
+  }
+
+  .contact__title {
+    max-width: 40rem;
+    margin: 1rem auto 0;
+    font-size: var(--step-3);
+  }
+
+  .contact__title em {
+    font-style: italic;
+    padding-right: 0.06em;
+  }
+
+  .contact__text {
+    margin-top: 1.25rem;
+    color: var(--text-muted);
+  }
+
+  .contact__btn {
+    display: inline-flex;
+    gap: 0.5rem;
+    margin-top: 2rem;
+    padding: 0.95rem 1.6rem;
+    border-radius: 999px;
+    background: var(--text);
+    color: var(--bg);
+    font-weight: 500;
+    transition: transform 250ms var(--ease-out), opacity 200ms ease;
+  }
+
+  .contact__btn:hover {
+    transform: translateY(-2px);
+    opacity: 0.9;
+  }
+</style>

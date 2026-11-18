@@ -1,0 +1,157 @@
+---
+import SectionHeading from '@/components/ui/SectionHeading.astro';
+import SpotlightCard from '@/components/ui/SpotlightCard.astro';
+import { events, publications } from '@/data/writing';
+---
+
+<section class="section" id="writing">
+  <div class="container">
+    <SectionHeading index="05" eyebrow="Talks, writing & community" title="Sharing what I <em>learn</em>" />
+
+    <ul class="list" role="list">
+      {
+        publications.map((item, i) => (
+          <SpotlightCard as="li" style={`--reveal-i: ${i}`}>
+            <a class="item" href={item.url} target="_blank" rel="noopener noreferrer">
+              <p class="item__meta">
+                <span class="item__kind">{item.kind}</span>
+                <span>{item.date}</span>
+                <span>{item.venue}</span>
+              </p>
+              <h3 class="item__title serif">{item.title}</h3>
+              <p class="item__summary">{item.summary}</p>
+              <span class="item__cta" aria-hidden="true">
+                {item.kind === 'Talk' ? 'Watch' : 'Read'} →
+              </span>
+            </a>
+          </SpotlightCard>
+        ))
+      }
+    </ul>
+
+    <div class="events" data-reveal>
+      <h3 class="events__title">Conferences I attend</h3>
+      <ul class="events__list" role="list">
+        {
+          events.map((event) => (
+            <li>
+              <span class="events__name">{event.name}</span>
+              <span class="events__meta">
+                {event.place} · {event.when}
+              </span>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </div>
+</section>
+
+<style>
+  .section {
+    padding-block: var(--section-gap);
+  }
+
+  .list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+    gap: 1rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    height: 100%;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  /* Make the whole card clickable */
+  .item::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+
+  .item__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem 0.9rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--text-faint);
+  }
+
+  .item__kind {
+    color: var(--ruby);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .item__title {
+    font-size: var(--step-1);
+    line-height: 1.25;
+  }
+
+  .item__summary {
+    color: var(--text-muted);
+  }
+
+  .item__cta {
+    margin-top: auto;
+    font-size: 0.85rem;
+    color: var(--ruby);
+    transition: transform 200ms ease;
+  }
+
+  .events {
+    margin-top: 2.5rem;
+  }
+
+  .events__title {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    font-weight: 400;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  .events__list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin: 1rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .events__list li {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    padding: 0.55rem 1rem;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--surface);
+  }
+
+  .events__name {
+    font-weight: 500;
+  }
+
+  .events__meta {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--text-faint);
+  }
+
+  .item:hover .item__cta,
+  .item:focus-visible .item__cta {
+    transform: translateX(4px);
+  }
+</style>

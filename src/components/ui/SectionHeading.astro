@@ -1,0 +1,69 @@
+---
+interface Props {
+  index: string;
+  eyebrow: string;
+  title: string;
+  lead?: string;
+}
+
+const { index, eyebrow, title, lead } = Astro.props;
+---
+
+<header class="heading" data-reveal>
+  <p class="heading__eyebrow">
+    <span class="heading__index">{index}</span>
+    <span class="heading__line" aria-hidden="true"></span>
+    {eyebrow}
+  </p>
+  <h2 class="heading__title serif" set:html={title} />
+  {lead && <p class="heading__lead">{lead}</p>}
+</header>
+
+<style>
+  .heading {
+    max-width: 44rem;
+    margin-bottom: clamp(2.5rem, 6vw, 4rem);
+  }
+
+  .heading__eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  .heading__index {
+    color: var(--ruby);
+  }
+
+  .heading__line {
+    width: 2.5rem;
+    height: 1px;
+    background: var(--border-strong);
+  }
+
+  .heading__title {
+    margin-top: 1rem;
+    font-size: var(--step-3);
+  }
+
+  .heading__title :global(em) {
+    font-style: italic;
+    background: var(--accent-gradient);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    padding-right: 0.06em;
+  }
+
+  .heading__lead {
+    margin-top: 1.25rem;
+    color: var(--text-muted);
+    font-size: var(--step-1);
+    line-height: 1.5;
+  }
+</style>

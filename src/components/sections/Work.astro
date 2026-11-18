@@ -1,0 +1,134 @@
+---
+import SectionHeading from '@/components/ui/SectionHeading.astro';
+import SpotlightCard from '@/components/ui/SpotlightCard.astro';
+import Tag from '@/components/ui/Tag.astro';
+import { highlights } from '@/data/highlights';
+
+// Wide cards: the first, any featured one, and the last if it would sit alone.
+const wide = highlights.map((item, i) => i === 0 || Boolean(item.featured));
+const narrowCount = wide.filter((w) => !w).length;
+if (narrowCount % 2 === 1) wide[wide.lastIndexOf(false)] = true;
+---
+
+<section class="section" id="work">
+  <div class="container">
+    <SectionHeading
+      index="02"
+      eyebrow="Selected work"
+      title="Problems I have <em>solved</em> lately"
+    />
+
+    <div class="work-grid">
+      {
+        highlights.map((item, i) => (
+          <SpotlightCard
+            class:list={['work', { 'work--wide': wide[i] }]}
+            style={`--reveal-i: ${i % 2}`}
+          >
+            <span class="work__num">{String(i + 1).padStart(2, '0')}</span>
+            <h3 class="work__title serif">{item.title}</h3>
+            <p class="work__summary">{item.summary}</p>
+            <ul class="work__points">
+              {item.points.map((point) => (
+                <li>{point}</li>
+              ))}
+            </ul>
+            <div class="work__tags">
+              {item.tags.map((tag) => (
+                <Tag name={tag} />
+              ))}
+            </div>
+          </SpotlightCard>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .section {
+    padding-block: var(--section-gap);
+  }
+
+  .work-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.25rem;
+  }
+
+  .work-grid > :global(.work) {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .work-grid > :global(.work--wide) {
+    grid-column: 1 / -1;
+    background:
+      radial-gradient(120% 140% at 100% 0%, var(--ruby-soft), transparent 55%),
+      var(--surface);
+  }
+
+  .work__num {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--text-faint);
+  }
+
+  .work__title {
+    margin-top: 0.75rem;
+    font-size: var(--step-2);
+  }
+
+  .work__summary {
+    margin-top: 0.75rem;
+    color: var(--text-muted);
+    max-width: 52rem;
+  }
+
+  .work__points {
+    display: grid;
+    gap: 0.5rem;
+    margin-top: 1.25rem;
+    font-size: 0.95rem;
+  }
+
+  :global(.work--wide) .work__points {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.25rem;
+  }
+
+  .work__points li {
+    position: relative;
+    padding-left: 1.1rem;
+  }
+
+  .work__points li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.68em;
+    width: 0.45rem;
+    height: 2px;
+    border-radius: 2px;
+    background: var(--ruby);
+  }
+
+  .work__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-top: auto;
+    padding-top: 1.5rem;
+  }
+
+  @media (max-width: 860px) {
+    .work-grid {
+      grid-template-columns: 1fr;
+    }
+
+    :global(.work--wide) .work__points {
+      grid-template-columns: 1fr;
+      gap: 0.5rem;
+    }
+  }
+</style>

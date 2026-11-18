@@ -1,0 +1,54 @@
+---
+import { slugify } from '@/lib/url';
+
+interface Props {
+  name: string;
+  /** Render as a link that filters the skills index */
+  linked?: boolean;
+}
+
+const { name, linked = true } = Astro.props;
+const Element = linked ? 'a' : 'span';
+---
+
+<Element
+  class="tag"
+  href={linked ? `#skills` : undefined}
+  data-tag-filter={linked ? name : undefined}
+  data-skill-ref={slugify(name)}
+>
+  {name}
+</Element>
+
+<style>
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.6rem;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    line-height: 1.4;
+    color: var(--text-muted);
+    background: var(--surface);
+    white-space: nowrap;
+    transition:
+      color 200ms ease,
+      border-color 200ms ease,
+      background-color 200ms ease;
+  }
+
+  a.tag:hover {
+    color: var(--text);
+    border-color: var(--ruby);
+    background: var(--ruby-soft);
+  }
+
+  .tag::before {
+    content: '#';
+    margin-right: 0.15em;
+    color: var(--ruby);
+    opacity: 0.7;
+  }
+</style>

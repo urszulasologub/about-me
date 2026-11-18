@@ -1,0 +1,84 @@
+/*
+ * Design tokens. Dark is the default; light is opt-in via
+ * [data-theme="light"] or the OS preference.
+ */
+:root {
+  /* Typography */
+  --font-display: 'Instrument Serif', 'Iowan Old Style', Georgia, serif;
+  --font-sans: 'Inter Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono Variable', ui-monospace, 'SF Mono', Menlo, monospace;
+
+  --step--1: clamp(0.82rem, 0.8rem + 0.1vw, 0.88rem);
+  --step-0: clamp(1rem, 0.96rem + 0.2vw, 1.1rem);
+  --step-1: clamp(1.2rem, 1.1rem + 0.5vw, 1.45rem);
+  --step-2: clamp(1.6rem, 1.3rem + 1.2vw, 2.2rem);
+  --step-3: clamp(2.2rem, 1.6rem + 2.6vw, 3.6rem);
+  --step-4: clamp(3rem, 1.8rem + 5.4vw, 6.4rem);
+
+  /* Space & shape */
+  --gutter: clamp(1rem, 4vw, 2.5rem);
+  --content: 72rem;
+  --radius-sm: 0.5rem;
+  --radius: 1rem;
+  --radius-lg: 1.5rem;
+  --section-gap: clamp(5rem, 12vw, 9rem);
+
+  /* Motion */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --dur: 600ms;
+
+  /* Color — dark */
+  --bg: #0b0a0c;
+  --bg-elev: #131114;
+  --surface: rgb(255 255 255 / 0.03);
+  --surface-hover: rgb(255 255 255 / 0.055);
+  --border: rgb(255 255 255 / 0.08);
+  --border-strong: rgb(255 255 255 / 0.16);
+  --text: #eeeae6;
+  --text-muted: #a39ca2;
+  --text-faint: #8a8288;
+
+  --ruby: #e5485f;
+  --ruby-soft: rgb(229 72 95 / 0.14);
+  --ember: #f2915f;
+  --accent-gradient: linear-gradient(120deg, var(--ruby) 0%, var(--ember) 100%);
+  --glow: rgb(229 72 95 / 0.22);
+
+  color-scheme: dark;
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme='dark']) {
+    --bg: #f8f5f1;
+    --bg-elev: #ffffff;
+    --surface: rgb(20 10 15 / 0.025);
+    --surface-hover: rgb(20 10 15 / 0.05);
+    --border: rgb(20 10 15 / 0.09);
+    --border-strong: rgb(20 10 15 / 0.18);
+    --text: #1c1719;
+    --text-muted: #5f565b;
+    --text-faint: #776d72;
+    --ruby: #c42640;
+    --ruby-soft: rgb(196 38 64 / 0.09);
+    --ember: #d9653a;
+    --glow: rgb(196 38 64 / 0.12);
+    color-scheme: light;
+  }
+}
+
+:root[data-theme='light'] {
+  --bg: #f8f5f1;
+  --bg-elev: #ffffff;
+  --surface: rgb(20 10 15 / 0.025);
+  --surface-hover: rgb(20 10 15 / 0.05);
+  --border: rgb(20 10 15 / 0.09);
+  --border-strong: rgb(20 10 15 / 0.18);
+  --text: #1c1719;
+  --text-muted: #5f565b;
+  --text-faint: #776d72;
+  --ruby: #c42640;
+  --ruby-soft: rgb(196 38 64 / 0.09);
+  --ember: #d9653a;
+  --glow: rgb(196 38 64 / 0.12);
+  color-scheme: light;
+}

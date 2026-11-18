@@ -1,0 +1,44 @@
+---
+import SectionHeading from '@/components/ui/SectionHeading.astro';
+import { profile } from '@/data/profile';
+---
+
+<section class="section" id="about">
+  <div class="container">
+    <SectionHeading
+      index="01"
+      eyebrow="About"
+      title="Backend at heart. <em>Owner</em> by habit."
+    />
+
+    <div class="about">
+      {
+        profile.about.map((paragraph, i) => (
+          <p data-reveal style={`--reveal-i: ${i}`}>
+            {paragraph}
+          </p>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .section {
+    padding-block: var(--section-gap);
+  }
+
+  .about {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    max-width: 46rem;
+    font-size: var(--step-1);
+    line-height: 1.6;
+    color: var(--text-muted);
+  }
+
+  .about p:first-child {
+    color: var(--text);
+  }
+</style>
