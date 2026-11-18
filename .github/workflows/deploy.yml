@@ -1,10 +1,10 @@
-# Deploys to GitHub Pages on every push to main.
+# Deploys to GitHub Pages on every push to master.
 # In the repo settings, set Pages → Source to "GitHub Actions".
 name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [main]
+    branches: [master]
   workflow_dispatch:
   # Monthly rebuild, so years of experience stay current
   schedule:
